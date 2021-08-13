@@ -17,14 +17,14 @@
          	<div class="col-md-4 mt-4">
          	<div class="my-card">
          	<h3 class="display-4">Register Here ..!</h3>
-         	<form th:action="@{/do_register}">
+         	<form action="" th:action="@{/do_register}" method="post" th:object="${user}">
          	<div class="mb-3">
     		<label for="input_name" class="form-label">Name</label>
-   		 	<input name="name" type="text" class="form-control" id="input_name" aria-describedby="emailHelp">
+   		 	<input name="name" type="text" class="form-control" id="input_name" aria-describedby="emailHelp" th:value="${user.name}">
  			 </div>
          	<div class="mb-3">
     		<label for="input_email" class="form-label">Email address</label>
-   		 	<input name="email" type="email" class="form-control" id="input_email" aria-describedby="emailHelp">
+   		 	<input name="email" type="email" class="form-control" id="input_email" aria-describedby="emailHelp" th:value="${user.email}">
    			 <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
  			 </div>
  			 <div class="mb-3">
@@ -33,8 +33,12 @@
  			 </div>
  			 
  			 <div class="form-group">
- 			 <textarea name="about" placeholder="Enter something about yourself..!" cols="36" rows="7" class="formcontrol"></textarea>
+ 			 <textarea name="about" placeholder="Enter something about yourself..!" cols="36" rows="7" class="formcontrol" th:value="${user.about}"></textarea>
  			 <div class="container"></div>
+ 			 <div class="form-group form-check">
+ 			  <input type="checkbox" name="agreement" class="form-check-input" id="agreement" required/>
+ 			  <label for="agreement">Please accept our terms and conditions !</label>
+ 			 </div>
  			  <button type="submit" class="btn btn-primary">
  			  Submit</button>
  			   <button type="reset" class="btn btn-danger">

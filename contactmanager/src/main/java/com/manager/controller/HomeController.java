@@ -1,9 +1,15 @@
 package com.manager.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,8 +31,9 @@ public class HomeController {
 	}
 	
 	@RequestMapping("/register")
-	public String register()
+	public String register(Model model)
 	{
+		model.addAttribute("user", new User());
 		return "register";
 	}
 	
@@ -34,6 +41,30 @@ public class HomeController {
 	public String about()
 	{
 		return "about";
+	}
+	
+	@RequestMapping("/suc")
+	public String succ()
+	{
+		return "success";
+	}
+	@RequestMapping(value="/do_register",method = RequestMethod.POST)
+	public String doreg(@ModelAttribute("user") User user)
+	{
+		
+		try {
+			user.setRole("ROLE_USER");
+			user.setEnabled(true);
+			user.setImageUrl("default.png");
+			User res=this.userRepository.save(user);
+			System.out.println(res);
+			return "success";
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.print(e.getMessage());
+			return "failed";
+		}
+	
 	}
 
 }
