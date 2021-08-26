@@ -2,6 +2,7 @@ package com.manager.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,9 @@ import com.manager.entities.User;
 
 @Controller
 public class HomeController {
+	
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
 	
 	@Autowired
 	private UserRepository userRepository;
@@ -56,6 +60,7 @@ public class HomeController {
 			user.setRole("ROLE_USER");
 			user.setEnabled(true);
 			user.setImageUrl("default.png");
+			user.setPassword(passwordEncoder.encode(user.getPassword()));
 			User res=this.userRepository.save(user);
 			System.out.println(res);
 			return "success";
@@ -65,6 +70,12 @@ public class HomeController {
 			return "failed";
 		}
 	
+	}
+	
+	@GetMapping("/signin")
+	public String customLogin(Model model)
+	{
+		return "login";
 	}
 
 }
