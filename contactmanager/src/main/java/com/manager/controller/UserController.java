@@ -6,24 +6,34 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.Principal;
+import java.util.List;
 
+import javax.servlet.http.HttpSession;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.manager.dao.ContactRepository;
 import com.manager.dao.UserRepository;
 import com.manager.entities.Contact;
 import com.manager.entities.User;
+import com.manager.util.Message;
+
+
 
 @Controller
 @RequestMapping("/user")
@@ -31,6 +41,9 @@ public class UserController
 {
 	@Autowired
 	 private UserRepository userRepository;
+	
+	@Autowired
+	private ContactRepository contactRepository;
 	
 	 @ModelAttribute
 	 public void addAll(Model model,Principal principal)
@@ -58,7 +71,7 @@ public class UserController
      }
      
      @PostMapping("/process-contact")
-     public String processContact(@ModelAttribute Contact contact,@RequestParam("profileImage") MultipartFile multipartFile,Principal principal)
+     public String processContact(@ModelAttribute Contact contact,@RequestParam("profileImage") MultipartFile multipartFile,Principal principal,HttpSession session)
      {
     	 String name=principal.getName();
     	 
@@ -77,8 +90,10 @@ public class UserController
     	 Path path=Paths.get(saveFile.getAbsolutePath()+File.separator+multipartFile.getOriginalFilename());
     	
     	 Files.copy(multipartFile.getInputStream(),path,StandardCopyOption.REPLACE_EXISTING );
+    	 session.setAttribute("message",new Message("Contact added successfully","success"));
     	 }catch (Exception e) {
 			System.out.println(e.getMessage());
+			session.setAttribute("message",new Message("Contact failed successfully","danger"));
 			e.printStackTrace();
 		}
     	 
@@ -88,7 +103,24 @@ public class UserController
     	 this.userRepository.save(user);
     	 
     	 System.out.println(contact.getName());
-    	 return"user/addcontact";
+    	 return"user/addcontact"; 
+     }
+     
+     @GetMapping("/show-contacts/{page}")
+     public String showContacts(@PathVariable("page") Integer page ,Principal principal,Model m)
+     {
+    	 String username=principal.getName();
+    	 User user=this.userRepository.getUserByUserName(username);
+    	
+    	 Pageable pageable=PageRequest.of(page, 2);
+    	 
+    	 Page<Contact> contacts=this.contactRepository.findContactsByUser(user.getId(),pageable);
+    	 m.addAttribute("contacts", contacts);
+    	 m.addAttribute("currentPage", page);
+    	 m.addAttribute("totalPages",contacts.getTotalPages());
+    	 
+ 
+    	 return "user/show_contacts";
      }
 }
  

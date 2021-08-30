@@ -21,9 +21,10 @@ public class Message {
 		this.type = type;
 	}
 
-	public Message() {
+	public Message(String content,String type) {
 		super();
-		// TODO Auto-generated constructor stub
+		this.content=content;
+		this.type=type;
 	}
 	
 }

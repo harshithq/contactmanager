@@ -46,7 +46,7 @@
     <div class="sidebar mt-3.8">
     <span onclick="toggleSideBar()" class="crossBtn">&times;</span>
     <a href="#" th:href="@{/user/index}" class="item"><i class="fas fa-home"></i> Home</a>
-    <a href="#" class="item"><i class="fas fa-address-book"></i> View Contacts</a>
+    <a href="#" th:href="@{/user/show-contacts/0}" class="item"><i class="fas fa-address-book"></i> View Contacts</a>
     <a href="#" th:href="@{/user/add-contact}"class="item"><i class="fas fa-user-plus"></i> Add Contact</a>
     <a href="#" class="item"><i class="fas fa-user-alt"></i> Your Profile</a>
     <a href="#" class="item"><i class="fas fa-cog"></i> Settings</a>
@@ -55,9 +55,12 @@
     
     
     <div class="content mt-5">
-    <div class="alert alert-success" role="alert">
-    This is a success alert—check it out!
+     <div th:if="${session.message}" class="container">
+    <div  th:classappend="${'alert-'+session.message.type}" class="alert" role="alert">
+     <span th:text="${session.message.content}" ></span>
       </div>
+      <th:block th:text="${#session.removeAttribute('message')}"></th:block>
+     </div>
      <div th:replace="${content}"></div>
     </div>
     
