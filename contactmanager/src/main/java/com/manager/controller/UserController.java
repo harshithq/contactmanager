@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpSession;
 
@@ -80,7 +81,9 @@ public class UserController
     	 
     	 
     	 contact.setUser(user);
-    	 
+    	 if(multipartFile.isEmpty())
+    	 contact.setImage("defimg.png");
+    	 else
     	 contact.setImage(multipartFile.getOriginalFilename());
     	 
     	 try
@@ -121,6 +124,16 @@ public class UserController
     	 
  
     	 return "user/show_contacts";
+     }
+     
+     @GetMapping("/contact/{cId}")
+     public String showDetails(@PathVariable("cId") Integer cId,Model model)
+     {
+    	 System.out.println("CId"+cId);
+    	 Optional<Contact> contactOpt = this.contactRepository.findById(cId);
+    	 Contact contact=contactOpt.get();
+    	 model.addAttribute("contact", contact);
+    	 return "user/contact_details";
      }
 }
  

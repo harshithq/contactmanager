@@ -33,7 +33,11 @@
   <tbody>
     <tr th:each="c,iter : ${contacts}">
       <td th:text="${iter.index}+1 + ${currentPage}*2"></td>
-      <td th:text="${c.name}"></td>
+      
+      
+      <td>
+      <img src="" class="dp" th:src="@{'/img/'+${c.image}}" alt="profile photo" />
+      <a href="" th:href="@{'/user/contact/'+${c.cId}}" ><span th:text="${c.name}"></span></a></td>
       <td th:text="${c.email}"></td>
       <td th:text="${c.phone}"></td>
       <td>
