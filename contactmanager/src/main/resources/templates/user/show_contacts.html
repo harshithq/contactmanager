@@ -41,7 +41,7 @@
       <td th:text="${c.email}"></td>
       <td th:text="${c.phone}"></td>
       <td>
-      <button class="btn btn-danger btn-small">Delete</button>
+      <a  href="" th:href="@{'/user/delete/'+${c.cId}}" class="btn btn-danger btn-small">Delete</a>
       <button class="btn btn-primary btn-small">Update</button>
       </td>
     </tr>

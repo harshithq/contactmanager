@@ -127,13 +127,41 @@ public class UserController
      }
      
      @GetMapping("/contact/{cId}")
-     public String showDetails(@PathVariable("cId") Integer cId,Model model)
+     public String showDetails(@PathVariable("cId") Integer cId,Model model,Principal principal)
      {
+    	 String username=principal.getName();
+    	 User user=this.userRepository.getUserByUserName(username);
+    	
+    	 
     	 System.out.println("CId"+cId);
     	 Optional<Contact> contactOpt = this.contactRepository.findById(cId);
     	 Contact contact=contactOpt.get();
+    	
+    	 
+    	 
+    	 if(user.getId()==contact.getUser().getId())
     	 model.addAttribute("contact", contact);
+    		 
+    		 
     	 return "user/contact_details";
+    	
+     }
+     
+     @GetMapping("/delete/{cId}")
+     public String deleteContact(@PathVariable("cId") Integer cId,Model model,Principal principal)
+     {
+    	 String username=principal.getName();
+    	 User user=this.userRepository.getUserByUserName(username);
+    	 
+    	 Optional<Contact> contactOpt=this.contactRepository.findById(cId);
+    	 
+    	 Contact contact=contactOpt.get();
+    	 
+    	 System.out.println("called");
+    
+    	 this.contactRepository.delete(contact);
+    	 
+    	 return "redirect:/user/show-contacts/0";
      }
 }
  
