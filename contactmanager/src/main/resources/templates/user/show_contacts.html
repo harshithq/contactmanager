@@ -42,7 +42,9 @@
       <td th:text="${c.phone}"></td>
       <td>
       <a  href="" th:href="@{'/user/delete/'+${c.cId}}" class="btn btn-danger btn-small">Delete</a>
-      <button class="btn btn-primary btn-small">Update</button>
+      <form method="post" th:action="@{'/user/update/'+${c.cId}}" class="mt-2"><button class="btn btn-primary btn-small">Update</button>
+      </form>
+      
       </td>
     </tr>
   </tbody>
